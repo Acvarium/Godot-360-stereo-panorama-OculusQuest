@@ -1,0 +1,26 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=2]
+
+[ext_resource path="res://testures/test_pano_R.jpg" type="Texture" id=1]
+[ext_resource path="res://testures/test_pano_L.jpg" type="Texture" id=2]
+
+[sub_resource type="Shader" id=2]
+code = "shader_type spatial;
+render_mode unshaded;
+
+uniform sampler2D left_img;
+uniform sampler2D right_img;
+
+void fragment() {
+    vec4 left_tex = texture(left_img, UV);
+    vec4 right_tex = texture(right_img, UV);
+    float mix_val = 1.0;
+    float v = PROJECTION_MATRIX[2][0];
+    if (v < 0.0) mix_val = 0.0;
+    vec3 tex = mix(right_tex.rgb, left_tex.rgb, mix_val);
+    ALBEDO = tex;
+}"
+
+[resource]
+shader = SubResource( 2 )
+shader_param/left_img = ExtResource( 2 )
+shader_param/right_img = ExtResource( 1 )
